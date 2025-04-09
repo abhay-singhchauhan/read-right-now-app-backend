@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id      String  @id @default(uuid())
+  name    String
+  email   String  @unique
+  classes Class[] @relation("TeacherToClasses")
+}
+
+model Class {
+  id          String       @id @default(uuid())
+  name        String
+  teacher     User?        @relation("TeacherToClasses", fields: [teacher_id], references: [id])
+  teacher_id  String?      // 👈 Must be nullable
+  students    Student[]
+  assessments Assessment[] @relation("ClassToAssessments")
+}
+
+
+
+model Student {
+  id         String      @id @default(uuid())
+  name       String
+  class      Class       @relation(fields: [class_id], references: [id])
+  class_id   String
+  assessments Assessment[] @relation("StudentToAssessments") // 👈 Add this
+}
+
+model Passage {
+  id         String   @id @default(uuid())
+  title      String
+  content    String
+  difficulty Difficulty
+  language   Language
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum Difficulty {
+  easy
+  medium
+  hard
+}
+
+enum Language {
+  hindi
+  english
+}
+
+
+model Assessment {
+  id              String   @id @default(uuid())
+  student_id      String
+  class_id        String
+  date            DateTime
+  word_count      Int
+  words_correct   Int
+  words_wrong     Int
+  words_skipped   Int
+  words_reread    Int
+  last_word_index Int
+  completed       Boolean
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  deleted_at      DateTime?
+  remarks         String?
+
+  student Student @relation("StudentToAssessments", fields: [student_id], references: [id]) // 👈 Add name
+  class   Class   @relation("ClassToAssessments", fields: [class_id], references: [id])     // 👈 Add name
+}
