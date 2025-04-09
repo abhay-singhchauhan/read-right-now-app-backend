@@ -8,7 +8,12 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors({ origin: "*" }));
+app.use(cors({
+    origin: ["http://localhost:8080", "https://readingtracker.llf.org.in", "http://readingtracker.llf.org.in"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
+
 app.use(express.json());
 
 // Mount at '/api/class'
