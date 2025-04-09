@@ -8,11 +8,13 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors({
-    origin: ["http://localhost:8080", "https://readingtracker.llf.org.in", "http://readingtracker.llf.org.in"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-}));
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://readingtracker.llf.org.in');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+});
 // Add before your routes
 app.use(express.json());
 
