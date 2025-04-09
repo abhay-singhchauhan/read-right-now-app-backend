@@ -13,7 +13,7 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
-
+// Add before your routes
 app.use(express.json());
 
 // Mount at '/api/class'
