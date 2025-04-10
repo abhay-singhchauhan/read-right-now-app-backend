@@ -29,6 +29,10 @@ exports.createAssessment = async (req, res) => {
                 words_reread,
                 last_word_index,
                 completed,
+            },
+            include: {
+                student: true,
+                class: true,
             }
         });
 
@@ -38,6 +42,7 @@ exports.createAssessment = async (req, res) => {
         res.status(500).json({ error: "Failed to save assessment" });
     }
 };
+
 
 // Existing: getLatestAssessments
 exports.getLatestAssessments = async (req, res) => {
